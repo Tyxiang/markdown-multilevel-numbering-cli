@@ -1,75 +1,74 @@
 # Markdown Multilevel Numbering (mmn)
 
-这是一个给 markdown 文档添加多级编号的工具，支持正文/附录两种编号模式，可通过指令灵活控制编号模式、深度。基于 [Markdown Multilevel Numbering](https://github.com/tyxiang/markdown-multilevel-numbering-core) 库开发。
+A CLI tool for adding multilevel numbering to markdown documents. Supports mainbody/appendix numbering modes with flexible control via commands. Built on top of [Markdown Multilevel Numbering](https://github.com/tyxiang/markdown-multilevel-numbering-core) library.
 
-## 1. 功能特性
+## 1. Features
 
-- 正文模式标题和段落的编号：`1.`, `1.1.`, `1.1.1.` ...
-- 附录模式标题和段落的编号：`A.`, `A.1.`, `A.1.1.` ...
-- 附录的 H2 标题格式：`附录 A 标题`。
-- 通过控制指令灵活改变编号行为。
-- 一级标题永远不会参与编号。
-- 只处理第一个一级标题逻辑范围内的内容，后续一级标题及其内容将被忽略。
-- 基于 AST 的可靠解析，保护代码块、列表、表格、数学公式等内容不被误改。
+- Mainbody mode numbering for headings and paragraphs: `1.`, `1.1.`, `1.1.1.` ...
+- Appendix mode numbering for headings and paragraphs: `A.`, `A.1.`, `A.1.1.` ...
+- Appendix H2 heading format: `Appendix A Heading`.
+- Flexible numbering control via commands.
+- Level 1 headings never participate in numbering.
+- Only processes content within the first level 1 heading's scope; subsequent level 1 headings and their content are ignored.
+- AST-based parsing protects code blocks, lists, tables, math formulas, etc. from being modified.
 
-## 2. 控制指令
+## 2. Control Commands
 
-在 markdown 文档中用 HTML 注释方式插入控制指令来控制编号行为。
+Insert control commands in markdown using HTML comments.
 
-注释格式：`<!-- mmn: command [command...] -->`
+Comment format: `<!-- mmn: command [command...] -->`
 
-| command    | 功能描述                                               |
-| ---------- | ------------------------------------------------------ |
-| `mainbody` | 编号模式指令，以默认值开始正文模式编号，深度默认为 `h` |
-| `appendix` | 编号模式指令，以默认值开始附录模式编号，深度默认为 `h` |
-| `h`        | 编号深度指令，给所有级别标题编号                       |
-| `h+p`      | 编号深度指令，给所有级别标题、段落编号                 |
-| `h2`       | 编号深度指令，给 2 级标题编号                          |
-| `h3`       | 编号深度指令，给 2~3 级标题编号                        |
-| `h4`       | 编号深度指令，给 2~4 级标题编号                        |
-| `h5`       | 编号深度指令，给 2~5 级标题编号                        |
-| `h6`       | 编号深度指令，给 2~6 级标题编号                        |
-| `end`      | 结束编号                                               |
+| command    | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| `mainbody` | Numbering mode: starts mainbody mode, default depth `h` |
+| `appendix` | Numbering mode: starts appendix mode, default depth `h` |
+| `h`        | Depth: number all heading levels                        |
+| `h+p`      | Depth: number all heading levels and paragraphs        |
+| `h2`       | Depth: number level 2 headings                          |
+| `h3`       | Depth: number levels 2-3 headings                      |
+| `h4`       | Depth: number levels 2-4 headings                      |
+| `h5`       | Depth: number levels 2-5 headings                      |
+| `h6`       | depth: number levels 2-6 headings                      |
+| `end`      | End numbering                                           |
 
-程序启动后，默认以 `mainbody` 模式开始编号。
+After program starts, defaults to `mainbody` mode.
 
-## 3. 编码逻辑示例
+## 3. Numbering Logic Examples
 
-详见 `doc/numbering-logic-demo.md`
+See `doc/numbering-logic-demo.md` for details.
 
-## 4. 安装
+## 4. Installation
 
-从 [Releases](https://github.com/your-repo/releases) 下载对应平台的二进制文件，无需安装 Node.js 运行时。
+Download the binary for your platform from [Releases](https://github.com/your-repo/releases). No Node.js runtime required.
 
-## 5. 命令格式
+## 5. Usage
 
 ```bash
 mmn -h | --help
 mmn -v | --version
 mmn help
-mmn update <text>|-i <file> [-o <file>]       # 更新多级编号，无 `-o <file>` 时输出到 stdout
-mmn remove <text>|-i <file> [-o <file>]       # 去除多级编号，无 `-o <file>` 时输出到 stdout
+mmn update <text>|-i <file> [-o <file>]       # Add numbering, outputs to stdout if no -o
+mmn remove <text>|-i <file> [-o <file>]       # Remove numbering, outputs to stdout if no -o
 ```
 
-## 6. 命令示例
+## 6. Examples
 
 ```bash
-# 添加编号 - 直接传入文本，输出到默认的 stdout
-mmn update "# 标题\n\n<!-- mmn: mainbody h -->\n\n## 第一节" 
-# 添加编号 - 直接传入文本，输出到文件
-mmn update "# 标题\n\n<!-- mmn: mainbody h -->\n\n## 第一节" -o output.md
-# 添加编号 - 从文件读取，输出到默认的 stdout
+# Add numbering - pass text directly, output to stdout
+mmn update "# Title\n\n<!-- mmn: mainbody h -->\n\n## Section"
+# Add numbering - pass text directly, output to file
+mmn update "# Title\n\n<!-- mmn: mainbody h -->\n\n## Section" -o output.md
+# Add numbering - read from file, output to stdout
 mmn update -i input.md
-# 添加编号 - 从文件读取，输出到文件
+# Add numbering - read from file, output to file
 mmn update -i input.md -o output.md
 
-# 去除编号 - 直接传入文本，输出到默认的 stdout
-mmn remove "# 标题\n\n<!-- mmn: mainbody h -->\n\n## 1. 第一节"
-# 去除编号 - 直接传入文本，输出到文件
-mmn remove "# 标题\n\n<!-- mmn: mainbody h -->\n\n## 1. 第一节" -o output.md
-# 去除编号 - 从文件读取，输出到默认的 stdout
+# Remove numbering - pass text directly, output to stdout
+mmn remove "# Title\n\n<!-- mmn: mainbody h -->\n\n## 1. Section"
+# Remove numbering - pass text directly, output to file
+mmn remove "# Title\n\n<!-- mmn: mainbody h -->\n\n## 1. Section" -o output.md
+# Remove numbering - read from file, output to stdout
 mmn remove -i input.md
-# 去除编号 - 从文件读取，输出到文件
+# Remove numbering - read from file, output to file
 mmn remove -i input.md -o output.md
 ```
-
