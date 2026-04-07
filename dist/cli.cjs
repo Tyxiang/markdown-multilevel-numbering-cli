@@ -16222,7 +16222,7 @@ function serializeMarkdown(ast) {
 }
 
 // node_modules/markdown-multilevel-numbering/dist/parser/extract.js
-var DIRECTIVE_REGEX = /<!--\s*mmn:\s*(.+?)\s*-->/g;
+var DIRECTIVE_REGEX = /^\s*<!--\s*mmn:\s*(.+?)\s*-->\s*$/;
 var VALID_DIRECTIVES = [
   "mainbody",
   "appendix",
@@ -16237,20 +16237,28 @@ var VALID_DIRECTIVES = [
 ];
 function extractDirectives(content3) {
   const directives = [];
-  let match;
-  while ((match = DIRECTIVE_REGEX.exec(content3)) !== null) {
-    const parts = match[1].trim().split(/\s+/);
-    for (const part of parts) {
-      if (VALID_DIRECTIVES.includes(part)) {
-        directives.push({
-          type: part,
-          raw: match[0],
-          position: { start: match.index, end: match.index + match[0].length },
-          offset: match.index
-        });
+  const ast = parseMarkdown(content3);
+  visit(ast, (node2) => {
+    if (node2.type === "html") {
+      const htmlNode = node2;
+      const value2 = htmlNode.value || "";
+      const match = value2.match(DIRECTIVE_REGEX);
+      if (match) {
+        const offset = node2.position?.start?.offset ?? 0;
+        const parts = match[1].trim().split(/\s+/);
+        for (const part of parts) {
+          if (VALID_DIRECTIVES.includes(part)) {
+            directives.push({
+              type: part,
+              raw: value2,
+              position: { start: offset, end: offset + value2.length },
+              offset
+            });
+          }
+        }
       }
     }
-  }
+  });
   return directives;
 }
 
@@ -16264,6 +16272,7 @@ function createInitialState() {
     scope: "heading",
     depth: 6,
     active: true,
+    // 默认开始编号
     counters: Array.from({ length: MAX_DEPTH }, () => 0)
   };
 }
@@ -16465,7 +16474,7 @@ function removeText(content3) {
 
 // src/cli.ts
 var import_promises = require("node:fs/promises");
-var version = "1.1.6";
+var version = "1.1.7";
 var program2 = new Command();
 program2.name("mmn").description("Markdown Multilevel Numbering CLI").version(version, "-v, --version");
 program2.command("update", { isDefault: true }).description("Add multilevel numbering to markdown").argument("[text]", "Input markdown text").option("-i, --input <file>", "Read input from file").option("-o, --output <file>", "Output to file (default: stdout)").action(async (text5, opts) => {
