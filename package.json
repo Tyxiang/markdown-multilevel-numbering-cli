@@ -1,0 +1,23 @@
+{
+  "name": "markdown-multilevel-numbering",
+  "version": "1.1.6",
+  "type": "module",
+  "description": "CLI tool for markdown multilevel numbering",
+  "bin": {
+    "mmn": "dist/cli.cjs"
+  },
+  "scripts": {
+    "build": "esbuild src/cli.ts --bundle --platform=node --outfile=dist/cli.cjs --format=cjs",
+    "dev": "esbuild src/cli.ts --bundle --platform=node --outfile=dist/cli.cjs --format=cjs --watch",
+    "pkg": "npm run build && npx pkg dist/cli.cjs --public-packages \"*\" --out-path release --targets node20-win-x64,node20-linux-x64,node20-macos-x64"
+  },
+  "dependencies": {
+    "markdown-multilevel-numbering": "latest",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "esbuild": "^0.24.0",
+    "@yao-pkg/pkg": "^6.14.2"
+  }
+}
