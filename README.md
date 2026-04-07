@@ -1,5 +1,7 @@
 # Markdown Multilevel Numbering (mmn)
 
+[English](./README.md) | [中文](./README_CN.md)
+
 A CLI tool for adding multilevel numbering to markdown documents. Supports mainbody/appendix numbering modes with flexible control via commands. Built on top of [Markdown Multilevel Numbering](https://github.com/tyxiang/markdown-multilevel-numbering-core) library.
 
 ## 1. Features

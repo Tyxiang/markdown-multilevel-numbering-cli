@@ -125,3 +125,33 @@ Uses esbuild CLI for bundling. Output is CommonJS format for Node.js compatibili
 npm run build   # build
 npm run dev     # watch mode
 ```
+
+## Publishing Release
+
+To create a GitHub release with platform-specific binaries:
+
+1. **Build and package**:
+   ```bash
+   npm run pkg
+   ```
+
+2. **Create zip files** for each platform:
+   ```powershell
+   Compress-Archive -Path release\win\* -DestinationPath release\mmn-win-x64.zip
+   Compress-Archive -Path release\linux\* -DestinationPath release\mmn-linux-x64.zip
+   Compress-Archive -Path release\macos\* -DestinationPath release\mmn-macos-x64.zip
+   ```
+
+3. **Create GitHub release**:
+   ```bash
+   gh release create v<version> --title "v<version>" --notes "<description>"
+   ```
+
+4. **Upload zip files**:
+   ```bash
+   gh release upload v<version> release/mmn-win-x64.zip
+   gh release upload v<version> release/mmn-linux-x64.zip
+   gh release upload v<version> release/mmn-macos-x64.zip
+   ```
+
+5. **Clean up local zip files** after upload.
