@@ -1,6 +1,6 @@
 {
   "name": "markdown-multilevel-numbering",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "type": "module",
   "description": "CLI tool for markdown multilevel numbering",
   "bin": {
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
-    "markdown-multilevel-numbering": "^1.1.8"
+    "markdown-multilevel-numbering": "^1.1.9"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",

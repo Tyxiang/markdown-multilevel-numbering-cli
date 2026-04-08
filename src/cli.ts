@@ -3,7 +3,7 @@ import { Command } from 'commander'
 import { updateText, removeText } from 'markdown-multilevel-numbering'
 import { readFile, writeFile } from 'node:fs/promises'
 
-const version = '1.1.7'
+const version = '1.1.9'
 
 const program = new Command()
 
